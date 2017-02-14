@@ -11,7 +11,7 @@ import CSVImporter
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-	
+
 	class Death {
 		let age: Int, mYears: Double, fYears: Double
 		init(age: Int, mYears: Double, fYears: Double) {
@@ -42,6 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		birthdayComponent.day = day
 		
 		let birthday = calendar.date(from: birthdayComponent as DateComponents)
+		let age = getAge(calendar: calendar, birthday: birthday!, curDate: curDate)
 		
 		self.statusItem.title = "??????"
 		
@@ -58,45 +59,60 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				
 		}.onFinish { importedRecords in
 			for death in importedRecords {
-				var age = calendar.component(.year, from: curDate) - calendar.component(.year, from: birthday!)
-				if (calendar.component(.month, from: curDate) >= calendar.component(.month, from: birthday!)) {
-					
-					if(calendar.component(.day, from: curDate) > calendar.component(.day, from: birthday!) && calendar.component(.month, from: curDate) == calendar.component(.month, from: birthday!)) {
-						age += 1
-					}
-					age -= 1
-				}
-
+				
 				if (age == death.age) {
-					var yearsToGo = 0.0
-					if(sex == "M") {
-						yearsToGo = death.mYears
-					} else {
-						yearsToGo = death.fYears
-					}
 					
-					let futureYears = Int(yearsToGo)
-					let futurePercentOfYear = (yearsToGo) - Double(futureYears)
-					let futureDays = Int(365 * futurePercentOfYear)
+					self.setDayString(dateDiff: self.getDaysToDeath(death: death, sex: sex, curDate: curDate))
 					
-					var deathDate = NSCalendar.current.date(byAdding: Calendar.Component.year, value: futureYears, to: curDate as Date)
-					deathDate = NSCalendar.current.date(byAdding: Calendar.Component.day, value: futureDays, to: deathDate! as Date)
-					
-					let dateDiff = deathDate?.timeIntervalSince(curDate)
-					let daysLeft = dateDiff! / 60 / 60 / 24
-					
-					self.statusItem.title = String(Int(daysLeft))
 				}
 			}
 		}
-		
-		
 	}
 
 	func applicationWillTerminate(_ aNotification: Notification) {
 		// Insert code here to tear down your application
 	}
-
+	
+	// Create sting and set number of days displayed in menu bar
+	func setDayString(dateDiff: Int) {
+		let daysLeft = dateDiff / 60 / 60 / 24
+		let beforeComma = Int(daysLeft / 1000)
+		let afterComma = Int(daysLeft % 1000)
+		
+		self.statusItem.title = String(beforeComma) + "," + String(afterComma)
+	}
+	
+	func getAge(calendar: Calendar, birthday: Date, curDate: Date) -> Int {
+		var age = calendar.component(.year, from: curDate) - calendar.component(.year, from: birthday)
+		if (calendar.component(.month, from: curDate) >= calendar.component(.month, from: birthday)) {
+			
+			if(calendar.component(.day, from: curDate) > calendar.component(.day, from: birthday) && calendar.component(.month, from: curDate) == calendar.component(.month, from: birthday)) {
+				age += 1
+			}
+			age -= 1
+		}
+		return age
+	}
+	
+	func getDaysToDeath(death: Death, sex: String, curDate: Date) -> Int {
+		var yearsToGo = 0.0
+		if(sex == "M") {
+			yearsToGo = death.mYears
+		} else {
+			yearsToGo = death.fYears
+		}
+		
+		let futureYears = Int(yearsToGo)
+		let futurePercentOfYear = (yearsToGo) - Double(futureYears)
+		let futureDays = Int(365 * futurePercentOfYear)
+		
+		var deathDate = NSCalendar.current.date(byAdding: Calendar.Component.year, value: futureYears, to: curDate as Date)
+		deathDate = NSCalendar.current.date(byAdding: Calendar.Component.day, value: futureDays, to: deathDate! as Date)
+		
+		let dateDiff = deathDate?.timeIntervalSince(curDate)
+		
+		return Int(dateDiff!)
+	}
 
 }
 
