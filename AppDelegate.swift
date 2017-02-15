@@ -23,14 +23,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	
 	
 	@IBOutlet weak var window: NSWindow!
-	let statusItem = NSStatusBar.system().statusItem(withLength: 50)
+	let statusItem = NSStatusBar.system().statusItem(withLength: 85)
 
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		
 		let year = 1994
 		let month = 2
-		let day = 15
+		let day = 12
 		let sex = "M"
 		
 		let calendar = NSCalendar.current
@@ -62,7 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 				
 				if (age == death.age) {
 					
-					self.setDayString(dateDiff: self.getDaysToDeath(death: death, sex: sex, curDate: curDate))
+					self.setDayString(dateDiff: self.getDaysToDeath(death: death, sex: sex, curDate: curDate, birth: birthday!, calendar: calendar))
 					
 				}
 			}
@@ -79,7 +79,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		let beforeComma = Int(daysLeft / 1000)
 		let afterComma = Int(daysLeft % 1000)
 		
-		self.statusItem.title = String(beforeComma) + "," + String(afterComma)
+		self.statusItem.title = String(beforeComma) + "," + String(afterComma) + " days"
 	}
 	
 	func getAge(calendar: Calendar, birthday: Date, curDate: Date) -> Int {
@@ -94,7 +94,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return age
 	}
 	
-	func getDaysToDeath(death: Death, sex: String, curDate: Date) -> Int {
+	func getDaysToDeath(death: Death, sex: String, curDate: Date, birth: Date, calendar: Calendar) -> Int {
 		var yearsToGo = 0.0
 		if(sex == "M") {
 			yearsToGo = death.mYears
@@ -106,7 +106,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		let futurePercentOfYear = (yearsToGo) - Double(futureYears)
 		let futureDays = Int(365 * futurePercentOfYear)
 		
-		var deathDate = NSCalendar.current.date(byAdding: Calendar.Component.year, value: futureYears, to: curDate as Date)
+		let birthdayComponent = NSDateComponents()
+		birthdayComponent.year = calendar.component(.year, from: curDate)
+		birthdayComponent.month = calendar.component(.month, from: birth)
+		birthdayComponent.day = calendar.component(.day, from: birth)
+		
+		let birthday = calendar.date(from: birthdayComponent as DateComponents)
+		
+		var deathDate = NSCalendar.current.date(byAdding: Calendar.Component.year, value: futureYears, to: birthday! as Date)
 		deathDate = NSCalendar.current.date(byAdding: Calendar.Component.day, value: futureDays, to: deathDate! as Date)
 		
 		let dateDiff = deathDate?.timeIntervalSince(curDate)
