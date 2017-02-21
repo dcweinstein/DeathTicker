@@ -12,6 +12,15 @@ import CSVImporter
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+	@IBOutlet weak var birthdayPicker: NSDatePickerCell!
+	@IBOutlet weak var maleButton: NSButton!
+	@IBOutlet weak var femaleButton: NSButton!
+	
+	var year = 1994
+	var month = 2
+	var day = 12
+	var sex = "M"
+	
 	class Death {
 		let age: Int, mYears: Double, fYears: Double
 		init(age: Int, mYears: Double, fYears: Double) {
@@ -28,10 +37,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		
-		let year = 1994
-		let month = 2
-		let day = 12
-		let sex = "M"
+		self.maleButton.state = 1
+		setContent()
+		
+	}
+
+	func applicationWillTerminate(_ aNotification: Notification) {
+		// Insert code here to tear down your application
+	}
+	
+	func setContent() {
+		
 		
 		let calendar = NSCalendar.current
 		let birthdayComponent = NSDateComponents()
@@ -51,26 +67,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		let importer = CSVImporter<Death>(path: path)
 		importer.startImportingRecords { recordValues -> Death in
 			return Death(age: Int(recordValues[0])!, mYears: Double(recordValues[1])!, fYears: Double(recordValues[2])!)
-		}.onFail {
-			print("The CSV file " + path + " couldn't be read.")
-		}.onProgress { importedDataLinesCount in
-			
-			print("\(importedDataLinesCount) lines were already imported.")
+			}.onFail {
+				print("The CSV file " + path + " couldn't be read.")
+			}.onProgress { importedDataLinesCount in
 				
-		}.onFinish { importedRecords in
-			for death in importedRecords {
+				print("\(importedDataLinesCount) lines were already imported.")
 				
-				if (age == death.age) {
+			}.onFinish { importedRecords in
+				for death in importedRecords {
 					
-					self.setDayString(dateDiff: self.getDaysToDeath(death: death, sex: sex, curDate: curDate, birth: birthday!, calendar: calendar))
-					
+					if (age == death.age) {
+						
+						self.setDayString(dateDiff: self.getDaysToDeath(death: death, sex: self.sex, curDate: curDate, birth: birthday!, calendar: calendar))
+						
+					}
 				}
-			}
 		}
-	}
 
-	func applicationWillTerminate(_ aNotification: Notification) {
-		// Insert code here to tear down your application
 	}
 	
 	// Create sting and set number of days displayed in menu bar
@@ -121,5 +134,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		return Int(dateDiff!)
 	}
 
+	@IBAction func dateChanged(_ sender: NSDatePicker) {
+		let calendar = NSCalendar.current
+		let changedDate = sender.dateValue
+		
+		self.year = calendar.component(.year, from: changedDate)
+		self.month = calendar.component(.month, from: changedDate)
+		self.day = calendar.component(.day, from: changedDate)
+		
+		setContent()
+	}
+	@IBAction func maleClicked(_ sender: NSButton) {
+		self.maleButton.state = 1
+		self.femaleButton.state = 0
+		sex="M"
+		
+		setContent()
+	}
+	@IBAction func femaleClicked(_ sender: NSButton) {
+		self.maleButton.state = 0
+		self.femaleButton.state = 1
+		sex="F"
+		
+		setContent()
+	}
 }
 

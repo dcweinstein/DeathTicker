@@ -13,7 +13,16 @@
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="DeathTicker" customModuleProvider="target"/>
+        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="DeathTicker" customModuleProvider="target">
+            <connections>
+                <outlet property="birthdayPicker" destination="Adp-3p-A01" id="quv-hC-TIN"/>
+                <outlet property="birthdaySelector" destination="xFS-wc-SZO" id="yK2-KD-Ddf"/>
+                <outlet property="femaleButton" destination="WWk-zX-Suv" id="Xnz-a6-nA2"/>
+                <outlet property="femaleRadio" destination="WWk-zX-Suv" id="yAt-6o-wKj"/>
+                <outlet property="maleButton" destination="SyH-KU-lOs" id="EOf-Gi-y4h"/>
+                <outlet property="maleRadio" destination="SyH-KU-lOs" id="ROe-tf-hNo"/>
+            </connections>
+        </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" frameAutosaveName="" animationBehavior="default" id="lw4-Oq-njt">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
@@ -36,14 +45,20 @@
                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                         </datePickerCell>
+                        <connections>
+                            <action selector="dateChanged:" target="Voe-Tx-rLC" id="add-Ft-znb"/>
+                        </connections>
                     </datePicker>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SyH-KU-lOs">
                         <rect key="frame" x="89" y="40" width="51" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="radio" title="Male" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="vvi-Ib-dEm">
+                        <buttonCell key="cell" type="radio" title="Male" bezelStyle="regularSquare" imagePosition="left" inset="2" id="vvi-Ib-dEm">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="maleClicked:" target="Voe-Tx-rLC" id="YsO-d6-f0c"/>
+                        </connections>
                     </button>
                     <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WWk-zX-Suv">
                         <rect key="frame" x="89" y="19" width="66" height="18"/>
@@ -52,6 +67,9 @@
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="femaleClicked:" target="Voe-Tx-rLC" id="DZl-Ic-0PW"/>
+                        </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rPI-0r-Apc">
                         <rect key="frame" x="20" y="82" width="55" height="17"/>
