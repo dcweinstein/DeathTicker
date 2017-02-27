@@ -15,9 +15,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	@IBOutlet weak var birthdayPicker: NSDatePickerCell!
 	@IBOutlet weak var maleButton: NSButton!
 	@IBOutlet weak var femaleButton: NSButton!
+	@IBOutlet weak var preferencesWindow: NSWindow!
+	
+	@IBOutlet weak var menu: NSMenu!
+	@IBOutlet weak var quit: NSMenuItem!
+	@IBOutlet weak var preferences: NSMenuItem!
+	var path = "./Applications/DeathTicker.app/Contents/Resources/config.data"
 	
 	var year = 1994
-	var month = 2
+	var month = 02
 	var day = 12
 	var sex = "M"
 	
@@ -38,6 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		
 		self.maleButton.state = 1
+		setDate()
 		setContent()
 		
 	}
@@ -61,6 +68,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		let age = getAge(calendar: calendar, birthday: birthday!, curDate: curDate)
 		
 		self.statusItem.title = "??????"
+		self.statusItem.menu = menu
 		
 		let path = "/Users/David/Dropbox/David/sandbox/data.csv"
 		
@@ -133,6 +141,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		
 		return Int(dateDiff!)
 	}
+	
+	func setDate() {
+		let dateFormatter = DateFormatter()
+		dateFormatter.dateFormat =  "yyyy-MM-dd"
+		let dateString = String(self.year) + "-" + String(self.month) + "-" + String(self.day)
+		
+		let date = dateFormatter.date(from: dateString)
+		
+		birthdayPicker.dateValue = date!
+	}
 
 	@IBAction func dateChanged(_ sender: NSDatePicker) {
 		let calendar = NSCalendar.current
@@ -157,6 +175,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		sex="F"
 		
 		setContent()
+	}
+	@IBAction func preferencesClicked(_ sender: NSMenuItem) {
+		print("clicked")
+		self.preferencesWindow!.orderFront(self)
+	}
+	@IBAction func quitClicked(_ sender: NSMenuItem) {
 	}
 }
 

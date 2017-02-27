@@ -21,6 +21,10 @@
                 <outlet property="femaleRadio" destination="WWk-zX-Suv" id="yAt-6o-wKj"/>
                 <outlet property="maleButton" destination="SyH-KU-lOs" id="EOf-Gi-y4h"/>
                 <outlet property="maleRadio" destination="SyH-KU-lOs" id="ROe-tf-hNo"/>
+                <outlet property="menu" destination="ESn-yy-dS7" id="Zhe-sS-5jX"/>
+                <outlet property="preferences" destination="IJH-yK-rxV" id="R8L-WN-eMK"/>
+                <outlet property="preferencesWindow" destination="lw4-Oq-njt" id="FD1-d6-7Oz"/>
+                <outlet property="quit" destination="4Yg-HR-jFU" id="Yvw-qx-eb7"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
@@ -93,5 +97,23 @@
             </view>
             <point key="canvasLocation" x="-308" y="25.5"/>
         </window>
+        <menu id="ESn-yy-dS7">
+            <items>
+                <menuItem title="Preferences" id="IJH-yK-rxV" userLabel="Preferences">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="preferencesClicked:" target="Voe-Tx-rLC" id="2bb-c7-Wkt"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="4qm-vV-mpJ"/>
+                <menuItem title="Quit" id="4Yg-HR-jFU" userLabel="Quit">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="quitClicked:" target="Voe-Tx-rLC" id="I2c-uy-TEl"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="-620" y="55.5"/>
+        </menu>
     </objects>
 </document>
