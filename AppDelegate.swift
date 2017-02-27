@@ -44,7 +44,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 	func applicationDidFinishLaunching(_ aNotification: Notification) {
 		
-		self.maleButton.state = 1
+		do {
+			let configPath = Bundle.main.path(forResource: "config", ofType: "data")
+			let fileContents = try String(contentsOfFile: configPath!, encoding: String.Encoding.utf8)
+			let settings:Array<String> = NSString(string: fileContents).components(separatedBy: "\n")
+			year = Int(settings[0])!
+			month = Int(settings[1])!
+			day = Int(settings[2])!
+			sex = String(settings[3])!
+			if(sex == "M") {
+				self.maleButton.state = 1
+				self.femaleButton.state = 0
+			}
+			else if(sex == "F") {
+				self.maleButton.state = 0
+				self.femaleButton.state = 1
+			}
+		}
+		catch {
+			print("error")
+		}
+		
 		setDate()
 		setContent()
 		
@@ -182,6 +202,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		self.preferencesWindow!.orderFront(self)
 	}
 	@IBAction func quitClicked(_ sender: NSMenuItem) {
+		let configPath = Bundle.main.path(forResource: "config", ofType: "data")
+		let file: FileHandle? = FileHandle(forWritingAtPath: configPath!)
+		if file != nil {
+			let data = (String(year) + "\n" + String(month) + "\n" + String(day) + "\n" + sex + "\n" as NSString).data(using: String.Encoding.utf8.rawValue)
+			file?.write(data!)
+			file?.closeFile()
+		} else {
+			print("Error in saving config")
+		}
 		NSApplication.shared().terminate(self)
 	}
 }
