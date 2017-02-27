@@ -20,7 +20,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	@IBOutlet weak var menu: NSMenu!
 	@IBOutlet weak var quit: NSMenuItem!
 	@IBOutlet weak var preferences: NSMenuItem!
-	var path = "./Applications/DeathTicker.app/Contents/Resources/config.data"
+	let configFile = "config.data"
+	let dbFile = "db.csv"
 	
 	var year = 1994
 	var month = 02
@@ -70,15 +71,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		self.statusItem.title = "??????"
 		self.statusItem.menu = menu
 		
-		let path = "/Users/David/Dropbox/David/sandbox/data.csv"
 		
-		let importer = CSVImporter<Death>(path: path)
+		let dbPath = Bundle.main.path(forResource: "db", ofType: "csv")
+		let importer = CSVImporter<Death>(path: dbPath!)
 		importer.startImportingRecords { recordValues -> Death in
 			return Death(age: Int(recordValues[0])!, mYears: Double(recordValues[1])!, fYears: Double(recordValues[2])!)
 			}.onFail {
-				print("The CSV file " + path + " couldn't be read.")
+				print("The CSV file " + dbPath! + " couldn't be read.")
 			}.onProgress { importedDataLinesCount in
-				
+					
 				print("\(importedDataLinesCount) lines were already imported.")
 				
 			}.onFinish { importedRecords in
@@ -90,7 +91,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 						
 					}
 				}
-		}
+			}
+		
 
 	}
 	
@@ -177,10 +179,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 		setContent()
 	}
 	@IBAction func preferencesClicked(_ sender: NSMenuItem) {
-		print("clicked")
 		self.preferencesWindow!.orderFront(self)
 	}
 	@IBAction func quitClicked(_ sender: NSMenuItem) {
+		NSApplication.shared().terminate(self)
 	}
 }
 
