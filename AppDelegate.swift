@@ -75,8 +75,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 	}
 	
 	func setContent() {
-		
-		
+
 		let calendar = NSCalendar.current
 		let birthdayComponent = NSDateComponents()
 		let curDate = Date()
@@ -112,7 +111,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 					}
 				}
 			}
-		
+		_ = Timer.scheduledTimer(timeInterval: 3600, target: self, selector: #selector(AppDelegate.setContent), userInfo: nil, repeats: true)
 
 	}
 	
